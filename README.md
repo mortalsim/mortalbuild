@@ -78,8 +78,9 @@ MortalBuild.build({
 
 ### Build Definition Object
 
-The Build definition object defines the command to be run. These commands are run via [child_process.exec][1].
-The options to define these commands are as follows:
+The Build definition object (`buildDef` in the options above) defines the command to be run.
+These commands are run via [child_process.exec][1]. The options to define these commands are
+as follows:
 
 |     Option     |        Type        |   Description  
 | -------------- | ------------------ | -------------------------------------------------------
