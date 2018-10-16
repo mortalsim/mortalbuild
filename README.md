@@ -92,4 +92,4 @@ The `tpl` template will be compiled at runtime with ${target} set to the target 
 set to the source file(s). The target extension (designated by `ext`) will be added internally.
 ${ext} should never be in the template string.
 
-[1] https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
+[1]: https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback)
