@@ -89,7 +89,7 @@ as follows:
 | args           | String or Object   | Arguments to pass to the cmd
 | tpl            | String             | ECMAScript template string for the command.
 
-The `tpl` template will be compiled at runtime with ${target} set to the target file and ${source}
+The `tpl` template will be compiled at runtime with `${target}` set to the target file and `${source}`
 set to the source file(s). The target extension (designated by `ext`) will be added internally.
 ${ext} should never be in the template string.
 
