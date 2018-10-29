@@ -1,6 +1,6 @@
 {
   "name": "mortalbuild",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A simple, straightforward build tool implemented in JavaScript",
   "main": "index.js",
   "directories": {
@@ -11,7 +11,9 @@
     "fast-glob": "^2.2.3",
     "mkdirp": "^0.5.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^5.8.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
