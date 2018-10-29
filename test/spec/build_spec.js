@@ -1,6 +1,10 @@
 const path = require('path');
 const MortalBuild = require('../..');
 
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  // application specific logging, throwing an error, or other logic here
+});
 // MortalBuild simply runs commands on a subprocess. For this it provides a simple
 // execution pool to run these commands in parallel. By creating one and providing
 // it to each of the build calls, the ExecPool can optimize CPU utilization for
@@ -61,7 +65,7 @@ MortalBuild.build({
   console.error('Oops, something went wrong...', err);
 });
 
-MortalBuild.fsUtil.ifNewerInDir(path.join(__dirname, '..', '..', 'lib'),
+MortalBuild.fsUtil.ifNewerInDir(path.join(__dirname, '..', '..', 'ggg'),
   path.join(__dirname, '..', '..', 'test'),
   () => {console.log('lib is newer'); },
   () => {console.log('test is newer'); });
