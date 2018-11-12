@@ -1,6 +1,6 @@
 {
   "name": "mortalbuild",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A simple, straightforward build tool implemented in JavaScript",
   "main": "index.js",
   "directories": {
@@ -12,10 +12,13 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
-    "eslint": "^5.8.0"
+    "del": "^3.0.0",
+    "eslint": "^5.8.0",
+    "intercept-stdout": "^0.1.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "node -e \"require('del').sync(['test/build'])\"",
+    "test": "npm run clean && node test/spec/build_spec.js"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,11 @@
-const path = require('path');
 const MortalBuild = require('../..');
+const assert = require('assert');
+var intercept = require('intercept-stdout');
+var capturedText = '';
+
+intercept(function(txt) {
+  capturedText += txt;
+});
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
@@ -18,6 +24,16 @@ var buildDef = {
   ext: '.o',
   // Command to invoke
   cmd: 'g++',
+  // Include flag
+  incl: '-I',
+  // Any include directories to add
+  includes: {
+    all: 'include/',
+    test: [
+      'test/include',
+      'dep/Catch2/single_include/'
+    ]
+  },
   // Any necessary flags for the command
   args: {
     // Optionally, FLAGS can be defined with ALL:, DEV:, and/or
@@ -25,19 +41,18 @@ var buildDef = {
     // on whether it's a development or production build.
 
     // These flags will be used for all builds
-    all: '-std=c++14 -Iinclude/',
+    all: '-std=c++14',
     // These will be used only for dev builds
     dev: '-Wall -Weffc++ -g',
     // These will be used only for production builds
-    prod: '-O3',
-    // These will be used only for test builds
-    test: '-Itest/include -Idep/Catch2/single_include/'
+    prod: '-O3'
   },
   // ECMAScript template for the build command. Use ${source}
   // for the source file(s) and ${target} for the target file
-  tpl: '${cmd} ${args} -c -o ${target} ${source}'
+  tpl: '${cmd} ${args} ${includes} -c -o ${target} ${source}'
 };
 
+console.log('Running tests...');
 
 // Run the build! This returns a promise so you can use it to be
 // notified when all build commands are complete
@@ -45,27 +60,40 @@ MortalBuild.build({
   execPool: pool,
   buildDef: buildDef,
   dev: true, // use the dev settings
-  src: path.join(__dirname, '..', 'src')+'/*',
-  targetDir: path.join(__dirname, '..', 'build_dev'),
+  src: 'test/src/*',
+  targetDir: 'test/build/dev',
 }).then(() => {
-  console.log('Development Build complete!');
+  var cmd = 'g++ -std=c++14 -Wall -Weffc++ -g -Iinclude/ -c -o test/build/dev/hello_world.o test/src/hello_world.cpp';
+  assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect dev build command');
+  console.log('dev build passed');
 }, (err) => {
-  console.error('Oops, something went wrong...', err);
+  throw err;
 });
 
 MortalBuild.build({
   execPool: pool,
   buildDef: buildDef,
   dev: false, // use the production settings
-  src: path.join(__dirname, '..', 'src')+'/*',
-  targetDir: path.join(__dirname, '..', 'build_prod'),
+  src: 'test/src/*',
+  targetDir: 'test/build/prod',
 }).then(() => {
-  console.log('Production Build complete!');
+  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -c -o test/build/prod/hello_world.o test/src/hello_world.cpp';
+  assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect prod build command');
+  console.log('prod build passed');
 }, (err) => {
-  console.error('Oops, something went wrong...', err);
+  throw err;
 });
 
-MortalBuild.fsUtil.ifNewerInDir(path.join(__dirname, '..', '..', 'ggg'),
-  path.join(__dirname, '..', '..', 'test'),
-  () => {console.log('lib is newer'); },
-  () => {console.log('test is newer'); });
+MortalBuild.build({
+  execPool: pool,
+  buildDef: buildDef,
+  test: true, // use the test settings
+  src: 'test/src/*',
+  targetDir: 'test/build/test',
+}).then(() => {
+  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -Itest/include -Idep/Catch2/single_include/ -c -o test/build/test/hello_world.o test/src/hello_world.cpp';
+  assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect test build command');
+  console.log('test build passed');
+}, (err) => {
+  throw err;
+});
