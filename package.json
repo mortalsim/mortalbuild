@@ -1,6 +1,6 @@
 {
   "name": "mortalbuild",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple, straightforward build tool implemented in JavaScript",
   "main": "index.js",
   "directories": {
