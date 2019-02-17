@@ -30,6 +30,20 @@ var buildDef = {
       ext: '.o'
       // Command to invoke
       cmd: 'g++'
+      // Any includes for various builds
+      includes:
+        // Included for all builds
+        all:
+          - 'include/',
+          - 'my/other/include/'
+        // Included only for dev builds
+        dev: 'src/include',
+        // Included only for production builds
+        prod: 'prod/include',
+        // Included only for test builds
+        test:
+          - 'test/include/',
+          - 'dep/Catch2/single_include'
       // Any necessary flags for the command
       args:
         // Optionally, FLAGS can be defined with ALL:, DEV:, and/or
@@ -43,7 +57,7 @@ var buildDef = {
         // These will be used only for production builds
         prod: '-O3'
         // These will be used only for test builds
-        test: '-Itest/include -Idep/Catch2/single_include/'
+        test: ''
       // ECMAScript template for the build command. Use ${source}
       // for the source file(s) and ${target} for the target file
       tpl: '${cmd} ${args} -c -o ${target} ${source}'
@@ -86,6 +100,8 @@ as follows:
 | -------------- | ------------------ | -------------------------------------------------------
 | ext            | String             | Target file extension
 | cmd            | String             | Command to execute
+| incl           | string             | Include flag string (ex. "-I" for gcc or "/I" for msvc)
+| includes       | String or Object   | Includes to pass to the cmd
 | args           | String or Object   | Arguments to pass to the cmd
 | tpl            | String             | ECMAScript template string for the command.
 
