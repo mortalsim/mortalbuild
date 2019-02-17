@@ -28,7 +28,10 @@ var buildDef = {
   incl: '-I',
   // Any include directories to add
   includes: {
-    all: 'include/',
+    all: [
+      'include/',
+      'second/include/'
+    ],
     test: [
       'test/include',
       'dep/Catch2/single_include/'
@@ -63,7 +66,7 @@ MortalBuild.build({
   src: 'test/src/*',
   targetDir: 'test/build/dev',
 }).then(() => {
-  var cmd = 'g++ -std=c++14 -Wall -Weffc++ -g -Iinclude/ -c -o test/build/dev/hello_world.o test/src/hello_world.cpp';
+  var cmd = 'g++ -std=c++14 -Wall -Weffc++ -g -Iinclude/ -Isecond/include/ -c -o test/build/dev/hello_world.o test/src/hello_world.cpp';
   assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect dev build command');
   console.log('dev build passed');
 }, (err) => {
@@ -77,7 +80,7 @@ MortalBuild.build({
   src: 'test/src/*',
   targetDir: 'test/build/prod',
 }).then(() => {
-  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -c -o test/build/prod/hello_world.o test/src/hello_world.cpp';
+  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -Isecond/include/ -c -o test/build/prod/hello_world.o test/src/hello_world.cpp';
   assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect prod build command');
   console.log('prod build passed');
 }, (err) => {
@@ -91,7 +94,7 @@ MortalBuild.build({
   src: 'test/src/*',
   targetDir: 'test/build/test',
 }).then(() => {
-  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -Itest/include -Idep/Catch2/single_include/ -c -o test/build/test/hello_world.o test/src/hello_world.cpp';
+  var cmd = 'g++ -std=c++14 -O3 -Iinclude/ -Isecond/include/ -Itest/include -Idep/Catch2/single_include/ -c -o test/build/test/hello_world.o test/src/hello_world.cpp';
   assert.ok(capturedText.indexOf(cmd) >= 0, 'Incorrect test build command');
   console.log('test build passed');
 }, (err) => {
